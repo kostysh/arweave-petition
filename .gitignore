@@ -24,6 +24,7 @@ package-lock.json
 .idea
 
 build
+output
 
 arweave-keyfile.json
 

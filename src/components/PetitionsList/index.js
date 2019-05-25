@@ -123,8 +123,6 @@ class PetitionsList extends Component {
                 }
             });
 
-            console.log('!!!===', txids);
-
             const records = await Promise.all(txids.map(async (tx) => {
                 const transaction = await arweave.transactions.get(tx);
                 const from = await arweave.wallets.ownerToAddress(transaction.get('owner'));
@@ -165,8 +163,6 @@ class PetitionsList extends Component {
                 }
             });
 
-            console.log('===', txids);
-
             const records = await Promise.all(txids.map(async (tx) => {
                 const signs = await this.fetchSigns(tx);
                 const transaction = await arweave.transactions.get(tx);
@@ -181,7 +177,7 @@ class PetitionsList extends Component {
                 };
             }));
 
-            console.log('>>>', records);
+            // console.log('>>>', records);
 
             await this.setStateAsync({
                 loading: false,
