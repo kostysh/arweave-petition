@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import './App.css';
 
 import AppContext, { arweave } from './components/AppContext';
 import Login from './components/Login';
