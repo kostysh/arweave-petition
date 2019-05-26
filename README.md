@@ -7,6 +7,8 @@ Test Arweave application that implements petitions use-case
 - Anyone who have a Arweave wallet can sign your petitions and number of signs will be displayed by right side of the petition. 
 - Anyone who have a Arweave wallet can create his own petitions. 
 
+Application is constantly available on the link: [https://arweave.net/-hSB7R6ysWaiauuHRXT5laHA-XbSgMt18FXuovroUzE](https://arweave.net/-hSB7R6ysWaiauuHRXT5laHA-XbSgMt18FXuovroUzE)
+
 ## Initialisation
 ```sh
 npm i

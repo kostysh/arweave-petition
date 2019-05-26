@@ -16,7 +16,7 @@
     "start": "BROWSER=none npx react-scripts start",
     "build": "npx react-scripts build",
     "savekey": "npx arweave key-save ./arweave-keyfile.json",
-    "deploy": "npm run build && npx arweave ./build/index.html --package",
+    "deploy": "npm run build && npx arweave deploy ./build/index.html --package",
     "testpack": "npm run build && npx arweave package ./build/index.html output/index.html",
     "serve": "npm run testpack && npx serve -s output"
   },
