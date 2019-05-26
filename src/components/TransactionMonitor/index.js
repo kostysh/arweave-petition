@@ -1,7 +1,8 @@
 import React, { Component, createContext, useContext } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
 import AppContext from '../../AppContext';
+import Loader from '../Loader';
 
 export const TransactionContext = createContext();
 
@@ -19,26 +20,6 @@ flex-flow: column;
 justify-content: center;
 align-items: center;
 background: rgba(68,81,89,0.65);
-`;
-
-const loaderAimation = keyframes`
-0% {
-    transform: rotate(0deg);
-}
-100% {
-    transform: rotate(360deg);
-}
-`;
-
-const Loader = styled.div`
-border: 3px solid #f3f3f3;
-border-top: 3px solid #3498db;
-border-radius: 50%;
-width: 100px;
-height: 100px;
-animation-name: ${loaderAimation};
-animation-duration: 1s;
-animation-iteration-count: infinite;
 `;
 
 const TransactionMonitor = ({ transaction, onSuccess, onError }) => {

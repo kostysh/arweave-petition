@@ -5,6 +5,7 @@ import packageJson from '../../../package.json';
 import AppContext from '../../AppContext';
 import { TransactionContext } from '../../components/TransactionMonitor';
 import Error from '../Error';
+import Loader from '../Loader';
 
 const ListOuter = styled.div`
 margin: 20px auto;
@@ -14,6 +15,9 @@ min-width: 450px;
 
 const LoadingOuter = styled.div`
 margin-top: 20px;
+display: flex;
+align-items: center;
+justify-content: center;
 `;
 
 const Row = styled.div`
@@ -259,7 +263,7 @@ class PetitionsList extends Component {
                     </TransactionContext.Consumer>                    
                 }
                 {loading &&
-                    <LoadingOuter>Loading...</LoadingOuter>
+                    <LoadingOuter><Loader /></LoadingOuter>
                 }
                 <Error error={error} onClose={() => this.setState({
                     error: false
