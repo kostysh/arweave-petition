@@ -2,7 +2,8 @@ import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 
 import packageJson from '../../../package.json';
-import AppContext from '../AppContext';
+import AppContext from '../../AppContext';
+import { TransactionContext } from '../../components/TransactionMonitor';
 import Error from '../Error';
 
 const FormOuter = styled.div`
@@ -95,7 +96,12 @@ const processAdd = async (
         transaction.addTag('Type', 'petition');
         await arweave.transactions.sign(transaction, wallet);
         const response = await arweave.transactions.post(transaction);
-        onSuccess(response);
+
+        if (response.status === 400 || response.status === 500) {
+            return onError(new Error('Transaction failed'));
+        }
+
+        onSuccess(transaction.id);
     } catch (error) {
         onError(error);
     }
@@ -105,6 +111,7 @@ export default () => {
     const { arweave, wallet, loggedIn, addFormOpened, setAddFormOpened } = useContext(AppContext);
     const [petition, setPetition] = useState('');
     const [error, setError] = useState(false);
+    const transactionMonitor = useContext(TransactionContext);
 
     if (!loggedIn || !addFormOpened) {
         return null;
@@ -127,7 +134,14 @@ export default () => {
                             arweave, 
                             wallet,
                             petition, 
-                            () => setAddFormOpened(false),
+                            tx => transactionMonitor(
+                                tx,
+                                () => setAddFormOpened(false),
+                                error => {
+                                    setError(error);
+                                    setAddFormOpened(false);
+                                }    
+                            ),
                             setError
                         )}
                     >Add</button>

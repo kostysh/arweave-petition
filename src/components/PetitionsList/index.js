@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 import packageJson from '../../../package.json';
-import AppContext from '../AppContext';
+import AppContext from '../../AppContext';
+import { TransactionContext } from '../../components/TransactionMonitor';
 import Error from '../Error';
 
 const ListOuter = styled.div`
@@ -177,7 +178,7 @@ class PetitionsList extends Component {
                 };
             }));
 
-            // console.log('>>>', records);
+            console.log('>>>', records);
 
             await this.setStateAsync({
                 loading: false,
@@ -190,9 +191,10 @@ class PetitionsList extends Component {
         }
     };
 
-    signPetition = async (id, onSuccess = () => {}) => {
+    signPetition = async (id, transactionContext) => {
         try {
             const { arweave, wallet } = this.context;
+            const transactionMonitor = transactionContext;
             const transaction = await arweave.createTransaction({
                 data: id
             }, wallet);
@@ -203,7 +205,20 @@ class PetitionsList extends Component {
             transaction.addTag('Petition', id);
             await arweave.transactions.sign(transaction, wallet);
             const response = await arweave.transactions.post(transaction);
-            onSuccess(response);
+
+            if (response.status === 400 || response.status === 500) {
+                return this.setState({
+                    error: new Error('Transaction failed')
+                });
+            }
+
+            transactionMonitor(
+                transaction.id, 
+                () => this.fetchList(),
+                error => this.setState({
+                    error
+                })
+            );
         } catch(error) {
             this.setState({
                 error
@@ -225,19 +240,23 @@ class PetitionsList extends Component {
 
         return (
             <ListOuter>
-                {(records && records.length > 0) &&
-                    records.map((r, i) => (
-                        <Row key={i}>
-                            <Title>
-                                <strong>{i+1}:</strong> {r.title}
-                            </Title>
-                            <Signs 
-                                active={loggedIn && r.signs.findIndex(t => t.from === loggedIn) === -1} //hide signed positions
-                                onClick={() => this.signPetition(r.id, this.fetchList)} 
-                                value={r.signs.length} 
-                            />
-                        </Row>
-                    ))
+                {(records && records.length > 0) && 
+                    <TransactionContext.Consumer>
+                        {(transactionContext) => records.map((r, i) => (
+                            <Row key={i}>
+                                <Title>
+                                    <strong>{i+1}:</strong> {r.title}
+                                </Title>
+                                <Signs 
+                                    value={r.signs.length} 
+                                    active={loggedIn && r.signs.findIndex(t => t.from === loggedIn) === -1} //hide signed positions
+                                    onClick={() => {
+                                        this.signPetition(r.id, transactionContext);
+                                    }} 
+                                />
+                            </Row>
+                        ))}
+                    </TransactionContext.Consumer>                    
                 }
                 {loading &&
                     <LoadingOuter>Loading...</LoadingOuter>

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import AppContext, { arweave } from './components/AppContext';
+import AppContext, { arweave } from './AppContext';
+import TransactionMonitor from './components/TransactionMonitor';
 import Login from './components/Login';
 import AddButton from './components/AddButton';
 import AddForm from './components/AddForm';
@@ -30,25 +31,27 @@ class App extends Component {
                     addFormOpened
                 })
             }}>
-                <div className="App">
-                    <div className="App-header">
-                        <p>
-                            Arweave petition application demo app
-                        </p>
-                        <AddButton
-                            visible={this.state.loggedIn && !this.state.addFormOpened}
-                            title="Add petition"
-                            onClick={() => this.setState({
-                                addFormOpened: true
-                            })}
-                        />
+                <TransactionMonitor>
+                    <div className="App">
+                        <div className="App-header">
+                            <p>
+                                Arweave petition application demo app
+                            </p>
+                            <AddButton
+                                visible={this.state.loggedIn && !this.state.addFormOpened}
+                                title="Add petition"
+                                onClick={() => this.setState({
+                                    addFormOpened: true
+                                })}
+                            />
+                        </div>
+                        <Content>
+                            <Login />
+                            <AddForm />
+                            <PetitionsList />
+                        </Content> 
                     </div>
-                    <Content>
-                        <Login />
-                        <AddForm />
-                        <PetitionsList />
-                    </Content> 
-                </div>
+                </TransactionMonitor>
             </AppContext.Provider>             
         );
     }
